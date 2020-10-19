@@ -1,9 +1,10 @@
-package sort
+package algorithmsgo
 
 import (
 	"sync"
 	"testing"
 )
+import mySort "./sort"
 
 var wg sync.WaitGroup
 
@@ -14,7 +15,7 @@ func TestSort(t *testing.T) {
 	//ss.margeSortEntree()
 	//ss.shellSortForMarge(11, 11)
 	//fmt.Println(ss.arr)
-	sortCompare(10000000, 100)
+	mySort.SortCompare(1000000, 100)
 	//ss := sortStruct{arr: []int{32,12,3}}
 	//fmt.Println(!ss.less(12, 3))
 	//ss.insertingSort()

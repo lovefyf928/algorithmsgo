@@ -17,7 +17,7 @@ func getTimestamp() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
-func sortCompare(n int, arrNum int) {
+func SortCompare(n int, arrNum int) {
 	rand.Seed(time.Now().UnixNano())
 	var finalArr [][]int
 	for j := 0; j < arrNum; j ++ {
