@@ -3,6 +3,7 @@ package sort
 import (
 	"fmt"
 	"math/rand"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -31,9 +32,10 @@ func SortCompare(n int, arrNum int) {
 	for i := 0; i < len(finalArr); i ++ {
 		ss := sortStruct{arr: finalArr[i]}
 		start := getTimestamp()
-		ss.margeSortEntree()
+		ss.quickSort(0, len(ss.arr) - 1)
+		//ss.margeSortEntree()
 		//ss.shellSort2()
-		//sort.Ints(ss.arr)
+		sort.Ints(ss.arr)
 		use := getTimestamp() - start
 		fmt.Println("第" + strconv.Itoa(i + 1) + "数组排序完成，耗时" + strconv.FormatFloat(float64(use) / float64(1000), 'f', 6, 64) + "s")
 	}
@@ -137,6 +139,30 @@ func (sortStruct *sortStruct)insertingSort()  {
 	}
 }
 
+// 合并
+func (sortStruct *sortStruct)marge1(lo int, hi int, mid int, tmp []int)  {
+	j := lo
+	n := mid + 1
+	for i := lo; i <= hi; i ++ {
+		tmp[i] = sortStruct.arr[i]
+	}
+			for i := lo; i <= hi; i ++ {
+				if j > mid {
+					sortStruct.arr[i] = tmp[n]
+					n ++
+				} else if n > hi {
+					sortStruct.arr[i] = tmp[j]
+					j ++
+				} else if sortStruct.less(tmp[n], tmp[j]) {
+					sortStruct.arr[i] = tmp[n]
+					n ++
+				} else {
+					sortStruct.arr[i] = tmp[j]
+					j ++
+				}
+			}
+}
+
 
 // 原地归并 (改进)
 func (sortStruct *sortStruct)marge(lo int, hi int, mid int, tmp []int, count int) {
@@ -195,7 +221,7 @@ func (sortStruct *sortStruct)marge(lo int, hi int, mid int, tmp []int, count int
 				}
 			}
 		} else {
-			fmt.Println("in tmp arr")
+			//fmt.Println("in tmp arr")
 			for i := lo; i <= hi; i ++ {
 				if j > mid {
 					tmp[i] = sortStruct.arr[n]
@@ -274,6 +300,58 @@ func (sortStruct *sortStruct) inSituMargeSort(lo int, hi int, tmp []int, count i
 	sortStruct.marge(lo, hi, mid, tmp, count)
 }
 
+// 自底向上归并
+func (sortStruct *sortStruct) margeSort2(sz int, arrMid int, tmp []int) {
+	if sz >= arrMid {
+		mid := 0 + (len(sortStruct.arr) - 1 - 0) / 2
+		sortStruct.marge1(0, len(sortStruct.arr) - 1, mid, tmp)
+		return
+	}
+	// TODO 待完善
+}
+
+
+
+// 快排
+func (sortStruct *sortStruct) quickSort(lo int, hi int) {
+	if lo >= hi {
+		return
+	}
+	vKey := sortStruct.partition(lo, hi)
+	sortStruct.quickSort(lo, vKey - 1)
+	sortStruct.quickSort(vKey + 1, hi)
+}
+
+
+
+
+
+// 切分
+func (sortStruct *sortStruct) partition(lo int, hi int) int {
+	v := sortStruct.arr[lo]
+	l := lo + 1
+	h := hi
+	for true {
+		for sortStruct.less(v, sortStruct.arr[h]) {
+			if h == lo {
+				break;
+			}
+			h --
+		}
+		for sortStruct.less(sortStruct.arr[l], v) {
+			if l == hi {
+				break;
+			}
+			l ++
+		}
+		if l >= h {
+			break
+		}
+		sortStruct.exch(l, h)
+	}
+	sortStruct.exch(h, lo)
+	return h
+}
 
 
 
